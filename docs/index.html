@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>近五年 20日跌幅統計</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif; margin: 24px; line-height: 1.5; }
+    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    input { padding: 10px 12px; min-width: 240px; }
+    button { padding: 10px 14px; cursor: pointer; }
+    pre { background: #f6f8fa; padding: 12px; border-radius: 8px; overflow:auto; }
+    .hint { color: #555; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <h1>近五年：收盤價相對 20 交易日前下跌次數</h1>
+
+  <div class="row">
+    <input id="symbol" placeholder="例如：0050.TW 或 VOO" />
+    <button id="go">查詢</button>
+  </div>
+  <div class="hint">規則：若今日收盤 ≤ 20日前收盤×0.95 計入 -5%；≤ ×0.90 計入 -10%</div>
+
+  <h3>結果</h3>
+  <pre id="out">請輸入代號後按「查詢」</pre>
+
+  <script>
+	const WORKER_BASE = ""; // 例：https://xxxxx.workers.dev
+
+	const $ = (id) => document.getElementById(id);
+
+	$("go").addEventListener("click", run);
+	$("symbol").addEventListener("keydown", (e) => {
+	  if (e.key === "Enter") run();
+	});
+
+	async function run() {
+	  const symbol = $("symbol").value.trim();
+	  if (!symbol) return;
+
+	  if (!WORKER_BASE) {
+		$("out").textContent = "尚未設定 WORKER_BASE，請先部署 Cloudflare Worker，再把 app.js 的 WORKER_BASE 填上。";
+		return;
+	  }
+
+	  $("out").textContent = "查詢中…（抓取近五年日線並計算）";
+
+	  try {
+		const url = `${WORKER_BASE}/api?symbol=${encodeURIComponent(symbol)}`;
+		const r = await fetch(url, { cache: "no-store" });
+		const j = await r.json();
+
+		if (!r.ok) throw new Error(j?.error || `HTTP ${r.status}`);
+
+		$("out").textContent =
+		  `Symbol: ${j.symbol}\n` +
+		  `資料筆數（交易日）: ${j.points}\n` +
+		  `收盤 <= 20日前收盤 * 0.95 次數: ${j.drop_vs_20d.le_5pct}\n` +
+		  `收盤 <= 20日前收盤 * 0.90 次數: ${j.drop_vs_20d.le_10pct}\n` +
+		  `資料期間: ${j.range?.start || "?"} ~ ${j.range?.end || "?"}\n` +
+		  `更新時間: ${j.generatedAt || "?"}\n`;
+	  } catch (e) {
+		$("out").textContent = `錯誤：${String(e.message || e)}`;
+	  }
+	}
+  </script>
+</body>
+</html>

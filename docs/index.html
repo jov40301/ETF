@@ -281,9 +281,8 @@
     <header>
       <div class="title">
         <h1>20 日跌幅統計（近 5 年）</h1>
-        <p>輸入台股例如 <span class="mono">0050.TW</span> 或美股/ETF例如 <span class="mono">VOO</span>，立即統計「收盤價相對 20 交易日前」下跌 ≥5% / ≥10% 的次數與平均收盤價。</p>
+        <p>輸入股票代號，台股要加「.TW」，舉例來說台股 <span class="mono">0050.TW</span> 或美股/ETF，例如 <span class="mono">VOO</span>，立即統計「收盤價相對 20 交易日前」下跌 ≥5% / ≥10% 的次數與平均收盤價。</p>
       </div>
-      <div class="pill" id="pill">API：未設定</div>
     </header>
 
     <div class="grid">
@@ -298,8 +297,8 @@
         </div>
 
         <div class="help">
-          規則：若今日收盤 ≤ 20 日前收盤 × 0.95 → 計入「≤ -5%」；若 ≤ × 0.90 → 計入「≤ -10%」。<br/>
-          小提醒：你後端有 12 小時快取，重複查同一個代號會更快、也比較不會耗用免費 API 額度。
+          <p>台股要加「.TW」，例如： <span class="mono">0050.TW</span> 
+			  美股/ETF直接輸入股票代號，例如： <span class="mono">VOO</span>
         </div>
 
         <div class="kpiRow" style="margin-top: 14px;">
@@ -365,11 +364,6 @@
             <div class="mono" style="opacity:.75;font-size:13px;">Twelve Data（time_series 1day）</div>
           </div>
         </div>
-
-        <footer>
-          <div>API URL 會顯示在右上角膠囊。</div>
-          <div>若你要把這頁放 GitHub Pages：請確保 <span class="mono">WORKER_BASE</span> 設定正確。</div>
-        </footer>
       </aside>
     </div>
   </div>

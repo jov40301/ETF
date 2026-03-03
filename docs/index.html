@@ -35,6 +35,8 @@
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
+      font-size: 16px;          /* ✅ 整體字級放大 */
+      line-height: 1.65;        /* ✅ 行距更舒服 */
       background: radial-gradient(1000px 700px at 10% -10%, rgba(110,168,254,.25), transparent 55%),
                   radial-gradient(900px 600px at 90% 10%, rgba(61,220,151,.18), transparent 55%),
                   var(--bg);
@@ -56,25 +58,25 @@
       margin-bottom: 16px;
     }
     .title h1{
-      font-size: 22px;
-      margin: 0 0 6px;
+      font-size: 28px;          /* ✅ 原本 22 */
+      margin: 0 0 8px;
       letter-spacing:.2px;
     }
     .title p{
       margin:0;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.45;
+      font-size: 16px;          /* ✅ 原本 14 */
+      line-height: 1.55;
     }
     .pill{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding: 8px 10px;
+      padding: 9px 12px;        /* ✅ 稍微放大 */
       border-radius: 999px;
       background: var(--card);
       border: 1px solid var(--line);
-      font-size: 12px;
+      font-size: 13px;          /* ✅ 原本 12 */
       color: var(--muted);
       user-select:none;
       white-space:nowrap;
@@ -93,13 +95,13 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 16px;
+      padding: 18px;            /* ✅ 原本 16 */
       overflow:hidden;
       position:relative;
     }
     .card h2{
-      margin:0 0 10px;
-      font-size: 15px;
+      margin:0 0 12px;
+      font-size: 18px;          /* ✅ 原本 15 */
       letter-spacing:.2px;
     }
     .form{
@@ -109,7 +111,7 @@
       flex-wrap:wrap;
     }
     .input{
-      flex: 1 1 240px;
+      flex: 1 1 260px;
       display:flex;
       align-items:center;
       gap:10px;
@@ -124,7 +126,7 @@
       outline:0;
       background: transparent;
       color: var(--text);
-      font-size: 15px;
+      font-size: 17px;          /* ✅ 原本 15 */
     }
     .btn{
       border: 1px solid var(--line);
@@ -134,6 +136,7 @@
       border-radius: 14px;
       cursor:pointer;
       font-weight: 650;
+      font-size: 16px;          /* ✅ 新增：按鈕字變大 */
       letter-spacing:.2px;
       transition: transform .05s ease, filter .15s ease;
       user-select:none;
@@ -145,16 +148,16 @@
       filter: grayscale(.2);
     }
     .help{
-      margin-top: 10px;
+      margin-top: 12px;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
+      font-size: 15px;          /* ✅ 原本 13 */
+      line-height: 1.65;
     }
     .kpiRow{
       display:grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 12px;
-      margin-top: 12px;
+      margin-top: 14px;
     }
     @media (max-width: 520px){
       .kpiRow{ grid-template-columns: 1fr; }
@@ -167,7 +170,7 @@
     }
     .kpi .label{
       color: var(--muted);
-      font-size: 12px;
+      font-size: 14px;          /* ✅ 原本 12 */
       margin-bottom: 6px;
       display:flex;
       align-items:center;
@@ -175,8 +178,8 @@
       gap:8px;
     }
     .badge{
-      font-size: 11px;
-      padding: 3px 8px;
+      font-size: 12px;          /* ✅ 原本 11 */
+      padding: 4px 9px;         /* ✅ 稍微放大 */
       border-radius: 999px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,.06);
@@ -184,20 +187,20 @@
       white-space:nowrap;
     }
     .kpi .value{
-      font-size: 28px;
-      font-weight: 750;
+      font-size: 34px;          /* ✅ 原本 28 */
+      font-weight: 780;
       letter-spacing:.3px;
       margin: 2px 0 6px;
     }
     .kpi .sub{
       color: var(--muted);
-      font-size: 13px;
+      font-size: 15px;          /* ✅ 原本 13 */
     }
     .meta{
       display:grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
-      margin-top: 12px;
+      margin-top: 14px;
     }
     @media (max-width: 520px){
       .meta{ grid-template-columns: 1fr; }
@@ -211,29 +214,30 @@
     @media (prefers-color-scheme: dark){
       .metaItem{ background: rgba(255,255,255,.03); }
     }
-    .metaItem .k{ color: var(--muted); font-size: 12px; margin-bottom: 6px; }
-    .metaItem .v{ font-size: 14px; }
+    .metaItem .k{ color: var(--muted); font-size: 13px; margin-bottom: 6px; } /* ✅ 原本 12 */
+    .metaItem .v{ font-size: 16px; }                                         /* ✅ 原本 14 */
     .status{
-      margin-top: 12px;
+      margin-top: 14px;
       padding: 12px;
       border-radius: 14px;
       border: 1px solid var(--line);
       background: rgba(255,255,255,.06);
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 15px;          /* ✅ 原本 13 */
+      line-height: 1.55;
       white-space: pre-wrap;
     }
     .status.ok{ border-color: rgba(61,220,151,.35); }
     .status.err{ border-color: rgba(255,107,107,.45); color: var(--text); background: rgba(255,107,107,.10); }
+
     .rightCard p{
       margin:0;
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
+      font-size: 15px;          /* ✅ 原本 13 */
+      line-height: 1.65;
     }
     .list{
-      margin-top: 10px;
+      margin-top: 12px;
       display:flex;
       flex-direction:column;
       gap:10px;
@@ -257,8 +261,17 @@
     footer{
       margin-top: 18px;
       color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
+      font-size: 13px;          /* ✅ 原本 12 */
+      line-height: 1.6;
+    }
+
+    /* ✅ 手機版再友善一點 */
+    @media (max-width: 520px){
+      .title h1{ font-size: 26px; }
+      .btn{ width: 100%; }
+      .input{ width: 100%; }
+      .kpi .value{ font-size: 32px; }
+      .wrap{ padding: 22px 14px 40px; }
     }
   </style>
 </head>
@@ -341,7 +354,7 @@
               <div><b class="mono">0050.TW</b> <span class="badge">台股 ETF</span></div>
               <button class="btn" data-symbol="0050.TW" style="padding:10px 12px;">查</button>
             </div>
-            <div class="mono" style="opacity:.75;font-size:12px;">FinMind（TaiwanStockPrice）</div>
+            <div class="mono" style="opacity:.75;font-size:13px;">FinMind（TaiwanStockPrice）</div>
           </div>
 
           <div class="item">
@@ -349,7 +362,7 @@
               <div><b class="mono">VOO</b> <span class="badge">US ETF</span></div>
               <button class="btn" data-symbol="VOO" style="padding:10px 12px;">查</button>
             </div>
-            <div class="mono" style="opacity:.75;font-size:12px;">Twelve Data（time_series 1day）</div>
+            <div class="mono" style="opacity:.75;font-size:13px;">Twelve Data（time_series 1day）</div>
           </div>
         </div>
 
@@ -416,11 +429,10 @@
 		return;
 	  }
 	  if (!WORKER_BASE) {
-		setStatus("狀態：尚未設定 WORKER_BASE（請在 docs/app.js 內設定你的 Worker 網址）", "err");
+		setStatus("狀態：尚未設定 WORKER_BASE（請在 index.html 內設定你的 Worker 網址）", "err");
 		return;
 	  }
 
-	  // UI reset (keep previous results but show loading)
 	  $("go").disabled = true;
 	  setStatus(`狀態：查詢中…\n${WORKER_BASE}/api?symbol=${encodeURIComponent(symbol)}`);
 
@@ -428,16 +440,11 @@
 		const url = `${WORKER_BASE}/api?symbol=${encodeURIComponent(symbol)}`;
 		const resp = await fetch(url, { cache: "no-store" });
 
-		// read cache hint
 		const cacheHint = resp.headers.get("x-cache") || "—";
 
 		const data = await resp.json();
-		if (!resp.ok) {
-		  throw new Error(data?.error || `HTTP ${resp.status}`);
-		}
+		if (!resp.ok) throw new Error(data?.error || `HTTP ${resp.status}`);
 
-		// Expecting:
-		// drop_vs_20d: { le_5pct: {count, avg_close}, le_10pct: {count, avg_close} }
 		const d5 = data?.drop_vs_20d?.le_5pct;
 		const d10 = data?.drop_vs_20d?.le_10pct;
 

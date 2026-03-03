@@ -3,65 +3,466 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>近五年 20日跌幅統計</title>
+  <title>20 日跌幅統計（近 5 年）</title>
+  <meta name="color-scheme" content="light dark" />
   <style>
-    body { font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif; margin: 24px; line-height: 1.5; }
-    .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    input { padding: 10px 12px; min-width: 240px; }
-    button { padding: 10px 14px; cursor: pointer; }
-    pre { background: #f6f8fa; padding: 12px; border-radius: 8px; overflow:auto; }
-    .hint { color: #555; font-size: 14px; }
+    :root{
+      --bg: #0b1020;
+      --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --line: rgba(255,255,255,.10);
+      --good: #3ddc97;
+      --warn: #ffd36a;
+      --bad: #ff6b6b;
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    @media (prefers-color-scheme: light) {
+      :root{
+        --bg: #f6f8ff;
+        --card: rgba(0,0,0,.04);
+        --card2: rgba(0,0,0,.06);
+        --text: rgba(0,0,0,.88);
+        --muted: rgba(0,0,0,.55);
+        --line: rgba(0,0,0,.10);
+        --shadow: 0 18px 60px rgba(0,0,0,.10);
+      }
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
+      background: radial-gradient(1000px 700px at 10% -10%, rgba(110,168,254,.25), transparent 55%),
+                  radial-gradient(900px 600px at 90% 10%, rgba(61,220,151,.18), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    a{ color: inherit; }
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 16px 44px;
+    }
+    header{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom: 16px;
+    }
+    .title h1{
+      font-size: 22px;
+      margin: 0 0 6px;
+      letter-spacing:.2px;
+    }
+    .title p{
+      margin:0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+      user-select:none;
+      white-space:nowrap;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.35fr .65fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    @media (max-width: 860px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+    .card{
+      background: linear-gradient(180deg, var(--card), transparent 140%);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+      overflow:hidden;
+      position:relative;
+    }
+    .card h2{
+      margin:0 0 10px;
+      font-size: 15px;
+      letter-spacing:.2px;
+    }
+    .form{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .input{
+      flex: 1 1 240px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding: 12px 12px;
+      border-radius: 14px;
+      background: var(--card2);
+      border: 1px solid var(--line);
+    }
+    .input input{
+      width:100%;
+      border:0;
+      outline:0;
+      background: transparent;
+      color: var(--text);
+      font-size: 15px;
+    }
+    .btn{
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(110,168,254,.35), rgba(110,168,254,.12));
+      color: var(--text);
+      padding: 12px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight: 650;
+      letter-spacing:.2px;
+      transition: transform .05s ease, filter .15s ease;
+      user-select:none;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn[disabled]{
+      opacity:.55;
+      cursor:not-allowed;
+      filter: grayscale(.2);
+    }
+    .help{
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .kpiRow{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    @media (max-width: 520px){
+      .kpiRow{ grid-template-columns: 1fr; }
+    }
+    .kpi{
+      background: var(--card2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .kpi .label{
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 6px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .badge{
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      white-space:nowrap;
+    }
+    .kpi .value{
+      font-size: 28px;
+      font-weight: 750;
+      letter-spacing:.3px;
+      margin: 2px 0 6px;
+    }
+    .kpi .sub{
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .meta{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    @media (max-width: 520px){
+      .meta{ grid-template-columns: 1fr; }
+    }
+    .metaItem{
+      background: rgba(0,0,0,.06);
+      border: 1px dashed var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    @media (prefers-color-scheme: dark){
+      .metaItem{ background: rgba(255,255,255,.03); }
+    }
+    .metaItem .k{ color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .metaItem .v{ font-size: 14px; }
+    .status{
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.06);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+    .status.ok{ border-color: rgba(61,220,151,.35); }
+    .status.err{ border-color: rgba(255,107,107,.45); color: var(--text); background: rgba(255,107,107,.10); }
+    .rightCard p{
+      margin:0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .list{
+      margin-top: 10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+    .item{
+      border: 1px solid var(--line);
+      background: var(--card2);
+      border-radius: 14px;
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+    }
+    .item .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+    footer{
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
   </style>
 </head>
+
 <body>
-  <h1>近五年：收盤價相對 20 交易日前下跌次數</h1>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>20 日跌幅統計（近 5 年）</h1>
+        <p>輸入台股例如 <span class="mono">0050.TW</span> 或美股/ETF例如 <span class="mono">VOO</span>，立即統計「收盤價相對 20 交易日前」下跌 ≥5% / ≥10% 的次數與平均收盤價。</p>
+      </div>
+      <div class="pill" id="pill">API：未設定</div>
+    </header>
 
-  <div class="row">
-    <input id="symbol" placeholder="例如：0050.TW 或 VOO" />
-    <button id="go">查詢</button>
+    <div class="grid">
+      <section class="card">
+        <h2>查詢</h2>
+        <div class="form">
+          <div class="input" title="輸入代號">
+            <span class="mono" style="opacity:.7">⌁</span>
+            <input id="symbol" placeholder="例如：0050.TW 或 VOO" autocomplete="off" spellcheck="false" />
+          </div>
+          <button class="btn" id="go">查詢</button>
+        </div>
+
+        <div class="help">
+          規則：若今日收盤 ≤ 20 日前收盤 × 0.95 → 計入「≤ -5%」；若 ≤ × 0.90 → 計入「≤ -10%」。<br/>
+          小提醒：你後端有 12 小時快取，重複查同一個代號會更快、也比較不會耗用免費 API 額度。
+        </div>
+
+        <div class="kpiRow" style="margin-top: 14px;">
+          <div class="kpi">
+            <div class="label">
+              ≤ -5%（相對 20 日前）
+              <span class="badge" id="b5">count / avg</span>
+            </div>
+            <div class="value" id="c5">—</div>
+            <div class="sub">平均收盤價：<span id="a5">—</span></div>
+          </div>
+
+          <div class="kpi">
+            <div class="label">
+              ≤ -10%（相對 20 日前）
+              <span class="badge" id="b10">count / avg</span>
+            </div>
+            <div class="value" id="c10">—</div>
+            <div class="sub">平均收盤價：<span id="a10">—</span></div>
+          </div>
+        </div>
+
+        <div class="meta">
+          <div class="metaItem">
+            <div class="k">資料區間</div>
+            <div class="v" id="range">—</div>
+          </div>
+          <div class="metaItem">
+            <div class="k">資料筆數（交易日）</div>
+            <div class="v" id="points">—</div>
+          </div>
+          <div class="metaItem">
+            <div class="k">資料源</div>
+            <div class="v" id="source">—</div>
+          </div>
+          <div class="metaItem">
+            <div class="k">更新時間</div>
+            <div class="v" id="generatedAt">—</div>
+          </div>
+        </div>
+
+        <div class="status" id="status">狀態：等待查詢</div>
+      </section>
+
+      <aside class="card rightCard">
+        <h2>快捷範例</h2>
+        <p>點一下就會自動帶入並查詢：</p>
+
+        <div class="list">
+          <div class="item">
+            <div class="top">
+              <div><b class="mono">0050.TW</b> <span class="badge">台股 ETF</span></div>
+              <button class="btn" data-symbol="0050.TW" style="padding:10px 12px;">查</button>
+            </div>
+            <div class="mono" style="opacity:.75;font-size:12px;">FinMind（TaiwanStockPrice）</div>
+          </div>
+
+          <div class="item">
+            <div class="top">
+              <div><b class="mono">VOO</b> <span class="badge">US ETF</span></div>
+              <button class="btn" data-symbol="VOO" style="padding:10px 12px;">查</button>
+            </div>
+            <div class="mono" style="opacity:.75;font-size:12px;">Twelve Data（time_series 1day）</div>
+          </div>
+        </div>
+
+        <footer>
+          <div>API URL 會顯示在右上角膠囊。</div>
+          <div>若你要把這頁放 GitHub Pages：請確保 <span class="mono">WORKER_BASE</span> 設定正確。</div>
+        </footer>
+      </aside>
+    </div>
   </div>
-  <div class="hint">規則：若今日收盤 ≤ 20日前收盤×0.95 計入 -5%；≤ ×0.90 計入 -10%</div>
-
-  <h3>結果</h3>
-  <pre id="out">請輸入代號後按「查詢」</pre>
 
   <script>
-	const WORKER_BASE = ""; // 例：https://xxxxx.workers.dev
+  // === 設定你的 Cloudflare Worker 網址 ===
+	const WORKER_BASE = "https://ticker-worker.jov40301.workers.dev";
 
 	const $ = (id) => document.getElementById(id);
 
-	$("go").addEventListener("click", run);
+	function setText(id, v) { $(id).textContent = v; }
+
+	function fmtNum(n) {
+	  if (n === null || n === undefined) return "—";
+	  if (typeof n !== "number" || Number.isNaN(n)) return "—";
+	  return n.toLocaleString(undefined, { maximumFractionDigits: 2 });
+	}
+
+	function fmtMoneyLike(n) {
+	  if (n === null || n === undefined) return "—";
+	  if (typeof n !== "number" || Number.isNaN(n)) return "—";
+	  return n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+	}
+
+	function setStatus(msg, type = "info") {
+	  const el = $("status");
+	  el.textContent = msg;
+	  el.classList.remove("ok", "err");
+	  if (type === "ok") el.classList.add("ok");
+	  if (type === "err") el.classList.add("err");
+	}
+
+	function setPill() {
+	  const pill = $("pill");
+	  pill.textContent = WORKER_BASE ? `API：${WORKER_BASE}` : "API：未設定";
+	}
+	setPill();
+
+	$("go").addEventListener("click", () => run());
 	$("symbol").addEventListener("keydown", (e) => {
 	  if (e.key === "Enter") run();
 	});
 
+	// right-side quick buttons
+	document.querySelectorAll("[data-symbol]").forEach((btn) => {
+	  btn.addEventListener("click", () => {
+		const s = btn.getAttribute("data-symbol");
+		$("symbol").value = s;
+		run();
+	  });
+	});
+
 	async function run() {
 	  const symbol = $("symbol").value.trim();
-	  if (!symbol) return;
-
+	  if (!symbol) {
+		setStatus("狀態：請先輸入代號（例如 0050.TW 或 VOO）", "err");
+		return;
+	  }
 	  if (!WORKER_BASE) {
-		$("out").textContent = "尚未設定 WORKER_BASE，請先部署 Cloudflare Worker，再把 app.js 的 WORKER_BASE 填上。";
+		setStatus("狀態：尚未設定 WORKER_BASE（請在 docs/app.js 內設定你的 Worker 網址）", "err");
 		return;
 	  }
 
-	  $("out").textContent = "查詢中…（抓取近五年日線並計算）";
+	  // UI reset (keep previous results but show loading)
+	  $("go").disabled = true;
+	  setStatus(`狀態：查詢中…\n${WORKER_BASE}/api?symbol=${encodeURIComponent(symbol)}`);
 
 	  try {
 		const url = `${WORKER_BASE}/api?symbol=${encodeURIComponent(symbol)}`;
-		const r = await fetch(url, { cache: "no-store" });
-		const j = await r.json();
+		const resp = await fetch(url, { cache: "no-store" });
 
-		if (!r.ok) throw new Error(j?.error || `HTTP ${r.status}`);
+		// read cache hint
+		const cacheHint = resp.headers.get("x-cache") || "—";
 
-		$("out").textContent =
-		  `Symbol: ${j.symbol}\n` +
-		  `資料筆數（交易日）: ${j.points}\n` +
-		  `收盤 <= 20日前收盤 * 0.95 次數: ${j.drop_vs_20d.le_5pct}\n` +
-		  `收盤 <= 20日前收盤 * 0.90 次數: ${j.drop_vs_20d.le_10pct}\n` +
-		  `資料期間: ${j.range?.start || "?"} ~ ${j.range?.end || "?"}\n` +
-		  `更新時間: ${j.generatedAt || "?"}\n`;
+		const data = await resp.json();
+		if (!resp.ok) {
+		  throw new Error(data?.error || `HTTP ${resp.status}`);
+		}
+
+		// Expecting:
+		// drop_vs_20d: { le_5pct: {count, avg_close}, le_10pct: {count, avg_close} }
+		const d5 = data?.drop_vs_20d?.le_5pct;
+		const d10 = data?.drop_vs_20d?.le_10pct;
+
+		setText("c5", fmtNum(d5?.count));
+		setText("a5", fmtMoneyLike(d5?.avg_close));
+
+		setText("c10", fmtNum(d10?.count));
+		setText("a10", fmtMoneyLike(d10?.avg_close));
+
+		setText("range", data?.range ? `${data.range.start} ~ ${data.range.end}` : "—");
+		setText("points", fmtNum(data?.points));
+		setText("source", data?.source || "—");
+		setText("generatedAt", data?.generatedAt || "—");
+
+		setText("b5", `cache ${cacheHint}`);
+		setText("b10", `cache ${cacheHint}`);
+
+		setStatus(
+		  `狀態：完成 ✅\nSymbol: ${data.symbol}\nCache: ${cacheHint}\nSource: ${data.source}`,
+		  "ok"
+		);
 	  } catch (e) {
-		$("out").textContent = `錯誤：${String(e.message || e)}`;
+		setStatus(`狀態：發生錯誤 ❌\n${String(e.message || e)}`, "err");
+	  } finally {
+		$("go").disabled = false;
 	  }
 	}
   </script>
